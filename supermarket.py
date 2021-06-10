@@ -2,27 +2,26 @@ import numpy as np
 import pandas as pd
 import random
 from customers import Customer
-from Markov_clean import Get_Entry
 
-entry = Get_Entry()
 
 class Supermarket:
     """manages multiple Customer instances that are currently in the market.
     """
 
-    def __init__(self, name):        
+    def __init__(self, name, entry):        
         # a list of Customer objects
         self.customers = []
         self.minutes = 420
-        self.last_id = 0
+        self.last_id = 1
         self.name = name
-        # opens at 7
-        # closes at 10
-
+        self.entry = entry
+        # opens at 7:00
+        # closes at 22:51
+       
 
     def __repr__(self):
         return f'{self.name} supermarket at {self.get_time()} with {len(self.customers)} customers.'
-
+    
     def get_time(self):
         """current time in HH:MM format,
         """
@@ -39,7 +38,8 @@ class Supermarket:
     def print_customers(self):
         """print all customers with the current time and id in CSV format.
         """
-        pass
+        for customer in self.customers:
+            print(f'{self.get_time()},{customer.customer_id},{customer.state}')
 
 
     def next_minute(self):
@@ -54,13 +54,13 @@ class Supermarket:
     def add_new_customers(self):
         """randomly creates new customers.
         """
-        
-        for cust in range(0,entry.iloc[420 - self.minutes]):
+        for cust in range(0,self.entry.iloc[420 - self.minutes]):
             state = random.choices(['dairy','drinks','fruit','spices'])
-            new_customer = Customer(1, state[0])
+            new_customer = Customer(self.last_id, state[0])
+            self.last_id += 1
             self.customers.append(new_customer)
-            print(new_customer.state)
-        
+   
+    
 
     
     def remove_exitsting_customers(self):

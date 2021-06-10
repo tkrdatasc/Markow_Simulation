@@ -1,6 +1,6 @@
 import numpy as np
 import cv2
-
+import time
 
 TILE_SIZE = 32
 OFS = 50
@@ -136,26 +136,28 @@ if __name__ == "__main__":
 
     market = SupermarketMap(MARKET, tiles)
     cust_image = market.extract_tile(5,1)
-    cust1 = Customer(market, cust_image, 14, 10)
+    cust1 = Customer(market, cust_image, 14, 2)
+    cust2 = Customer(market, cust_image, 10, 2)
 
     while True: # this script will run forever
         frame = background.copy()
         market.draw(frame) # it draws in to the supermarket
         cust1.draw(frame)
-
+        time.sleep(5)
+        cust2.draw(frame)
         cv2.imshow("frame", frame)
 
         key = chr(cv2.waitKey(1) & 0xFF)
         if key == "q":
             break
-        if key == 'w':
-            cust1.move('up')
-        if key == 'a':
-            cust1.move('left')
-        if key == 'd':
-            cust1.move('right')
-        if key == 'z':
-            cust1.move('down')
+        # if key == 'w':
+        #     cust1.move('up')
+        # if key == 'a':
+        #     cust1.move('left')
+        # if key == 'd':
+        #     cust1.move('right')
+        # if key == 'z':
+        #     cust1.move('down')
 
 
     cv2.destroyAllWindows()

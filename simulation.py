@@ -1,17 +1,23 @@
 from supermarket import Supermarket
+from Markov_clean import Get_Entry
 
-lidl = Supermarket(name='LIDL')
+entry = Get_Entry()
+ 
+lidl = Supermarket(name='LIDL', entry = entry)
+
 
 while lidl.is_open():
 
     # increase the time of the supermarket by one minute
     lidl.next_minute()
-
+    lidl.add_new_customers()
+    lidl.print_customers()
     # remove churned customers from the supermarket
     lidl.remove_exitsting_customers()
 
     # generate new customers at their initial location
-    lidl.add_new_customers()
+    
 
     # repeat from step 1
-    print(lidl)
+  
+
