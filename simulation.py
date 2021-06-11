@@ -1,5 +1,5 @@
 from supermarket import Supermarket
-from Markov_clean import Get_Entry
+from Markov import Get_Entry
 
 entry = Get_Entry()
  

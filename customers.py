@@ -1,6 +1,6 @@
 ## Writing a Customer class
 import random
-from Markov_clean import Get_Markov
+from Markov import Get_Markov
 # Create a class
 
 P = Get_Markov()
