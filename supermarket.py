@@ -16,12 +16,12 @@ class Supermarket:
         self.name = name
         self.entry = entry
         # opens at 7:00
-        # closes at 22:51
+        # closes at 21:51
        
-
     def __repr__(self):
         return f'{self.name} supermarket at {self.get_time()} with {len(self.customers)} customers.'
     
+
     def get_time(self):
         """current time in HH:MM format,
         """
@@ -31,7 +31,10 @@ class Supermarket:
 
 
     def is_open(self):  
-        # supermarket closes after 15 hours    
+        """
+        supermarket closes after 15 hours, customer is allowed to come in before 21:51
+        total minute from 7:00 to 21:51 is 1311 minutes  
+        """ 
         return self.minutes < 1311
 
 
@@ -59,8 +62,6 @@ class Supermarket:
             new_customer = Customer(self.last_id, state[0])
             self.last_id += 1
             self.customers.append(new_customer)
-   
-    
 
     
     def remove_exitsting_customers(self):

@@ -5,7 +5,6 @@ Created on Wed Jun  9 15:34:32 2021
 @author: Thomas
 """
 
-# %%
 import os
 import numpy as np
 import pandas as pd
@@ -27,8 +26,7 @@ df = df.sort_index()
 df['weekday'] = df.index.dayofweek
 df['weekday'] = df['weekday'].apply(lambda x: calendar.day_name[x])
 
-#os.chdir('G:/spiced')
-# %%
+
 def Get_Markov():
     # Calculate the total number of customers in the supermarket over time
     # forward fill to fill out the timestamps
@@ -41,7 +39,7 @@ def Get_Markov():
     P = pd.crosstab(df2['location'], df2['next_location'], normalize='index')
     return P
 
-    # %%
+
 def Get_Entry():
     df['timestamp'] = df.index.time
     time_spent = df.groupby(['weekday','customer_no'], as_index=False).agg({'timestamp':'min'})
