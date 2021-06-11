@@ -62,7 +62,6 @@ class Supermarket:
             new_customer = Customer(self.last_id, state[0])
             self.last_id += 1
             self.customers.append(new_customer)
-
     
     def remove_exitsting_customers(self):
         """removes every customer that is not active any more.

@@ -1,6 +1,10 @@
 import numpy as np
 import cv2
 import time
+import random
+from Markov_clean import Get_Markov
+
+P = Get_Markov()
 
 TILE_SIZE = 32
 OFS = 50
@@ -97,21 +101,41 @@ class SupermarketMap:
 
 class Customer:
 
-    def __init__(self, terrain_map, image, x, y):
+    def __init__(self, terrain_map, image, customer_id, state, matrix = P):
 
         self.terrain_map = terrain_map
         self.image = image
-        self.x = x # the column
-        self.y = y # the row
-    
+        self.customer_id = customer_id
+        self.state = state
+        self.matrix = matrix
+        
     def __repr__(self):
-        return f'the customer is now at {self.x} and {self.y}!'
+        return f'the customer is now at {self.state}!'
 
     def draw(self, frame):
-        xpos = OFS + self.x * TILE_SIZE
-        ypos = OFS + self.y * TILE_SIZE
+        location_pos = {'dairy':(10,2),'drinks':(6,2),'fruit':(14,2),
+                        'spices':(2,2),'checkout':(11,8)}
+        
+        xpos = OFS + location_pos[self.state][0] * TILE_SIZE
+        ypos = OFS + location_pos[self.state][1] * TILE_SIZE
         frame[ypos:ypos+TILE_SIZE, xpos:xpos+TILE_SIZE] = self.image
         # overlay the Customer image / sprite onto the frame
+        
+    
+    def next_state(self):
+        '''
+        Propagates the customer to the next state.
+        Returns nothing.
+        '''
+        self.state = random.choices(['checkout','dairy','drinks','fruit','spices'],
+                                   self.matrix.loc[self.state])
+        
+        self.state = self.state[0]
+        # location_pos = {'dairy':(10,2),'drinks':(6,2),'fruit':(14,2),
+        #                 'spices':(2,2),'checkout':(1,1)}
+        # self.state = location_pos[self.state]
+        return self.state
+    
     
     def move(self, direction):
         newx = self.x
@@ -136,15 +160,21 @@ if __name__ == "__main__":
 
     market = SupermarketMap(MARKET, tiles)
     cust_image = market.extract_tile(5,1)
-    cust1 = Customer(market, cust_image, 14, 2)
-    cust2 = Customer(market, cust_image, 10, 2)
+    cust1 = Customer(market, cust_image, 1, state='dairy') # spice
+    # cust2 = Customer(market, cust_image, 6, 2) # drinks
+    # cust3 = Customer(market, cust_image, 10, 2) # dairy
+    # cust4 = Customer(market, cust_image, 14, 2) # fruit
 
+    count = 0
+    minutes = 0
+    
     while True: # this script will run forever
         frame = background.copy()
         market.draw(frame) # it draws in to the supermarket
         cust1.draw(frame)
-        time.sleep(5)
-        cust2.draw(frame)
+        # cust2.draw(frame)
+        # cust3.draw(frame)
+        # cust4.draw(frame)
         cv2.imshow("frame", frame)
 
         key = chr(cv2.waitKey(1) & 0xFF)
@@ -158,7 +188,11 @@ if __name__ == "__main__":
         #     cust1.move('right')
         # if key == 'z':
         #     cust1.move('down')
-
+        if count == 64:
+            count = 0
+            minutes += 1
+            cust1.next_state()
+        count += 1
 
     cv2.destroyAllWindows()
 
